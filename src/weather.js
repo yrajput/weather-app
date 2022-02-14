@@ -1,5 +1,4 @@
 
-
 export const initialState = {
     days: [
       {name: 'Monday', date: 'March 1st, 1:00 pm', temp: '79', forecast: 'cloudy'},
@@ -13,9 +12,30 @@ export const initialState = {
 
   //actions
   export function setDays(data){
+    console.log("action hit", data)
     return {
       type: 'UPDATE_WEATHER',
-      payload: data.daily
+      payload: data
+    }
+  }
+
+  export function setLocation(location) {
+    return {
+      type: 'UPDATE_LOCATION',
+      payload: location
+    }
+  }
+
+  export const getWeather = async (dispatch, getState) =>{
+    try {
+      const url = 'https://api.openweathermap.org/data/2.5/onecall?lat=33.44&lon=-94.04&exclude=current,minutely,alert,hourly&units=imperial&appid=8230789c2223488861ff99d985309312'
+      const response = await fetch(url).then(response => 
+        response.json());
+      const dataToReturn = response.daily
+      console.log("dataToReturn: ", dataToReturn)
+      return dataToReturn
+    } catch {
+      console.log("error");
     }
   }
 
@@ -26,7 +46,19 @@ export const initialState = {
           case 'UPDATE_WEATHER':
             return {
               ...state,
-              days: [actions.payload]
+              days: actions.payload.map((day) => {
+                return {
+                  name: 'Friday',
+                  date: day.dt,
+                  temp: day.temp.day,
+                  forecast: day.weather.description,
+                }
+              })
+            }
+          case 'UPDATE_LOCATION':
+            return {
+              ...state,
+              location: actions.payload
             }
           default:
             return state

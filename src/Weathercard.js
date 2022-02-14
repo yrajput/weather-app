@@ -1,7 +1,9 @@
-import React, {Component} from 'react'
+import React, { useEffect} from 'react'
 import './Weathercard.css';
-import {connect, useDispatch, useSelector} from 'react-redux'
+import { useDispatch, useSelector} from 'react-redux'
 import { GetWeatherData } from './GetWeatherData';
+import { getWeather, setLocation, setDays } from './weather';
+
 
 
 export default function Weathercard () {
@@ -14,9 +16,13 @@ export default function Weathercard () {
       location: state.location , 
     }
   })
+  useEffect(()=>{
+    const data = getWeather();
+    console.log("after getWeather call: data", setTimeout(data/*.then(result=> result.data)*/, 5000))
 
-  GetWeatherData()
-  console.log(days)
+    dispatch((setDays(data)))
+    //dispatch(setLocation('Chicago'))
+  },[])
   return (
     <div>
       <div className="Location">{location}</div>
