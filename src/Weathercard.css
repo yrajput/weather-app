@@ -1,0 +1,23 @@
+
+.WeatherList {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+.Location {
+    justify-content: center;
+    color: gray;
+}
+
+.IndividualCard {
+    border:solid;
+    width: auto;
+    height: auto;
+    margin: 20px;
+    padding: 10px;
+}
+
+.DayDate {
+    color: gray;
+}
