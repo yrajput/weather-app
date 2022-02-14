@@ -1,6 +1,7 @@
 import React, {Component} from 'react'
 import './Weathercard.css';
 import {connect, useDispatch, useSelector} from 'react-redux'
+import { GetWeatherData } from './GetWeatherData';
 
 
 export default function Weathercard () {
@@ -13,13 +14,15 @@ export default function Weathercard () {
       location: state.location , 
     }
   })
-      
+
+  GetWeatherData()
+  console.log(days)
   return (
     <div>
       <div className="Location">{location}</div>
       <div className="WeatherList">
         {days.map((day) =>
-          <div className="IndividualCard">
+          <div className="IndividualCard" key={day.name}>
             <div className="DayName"> {day.name} </div>
             <div className="DayDate"> {day.date} </div>
             <div className="DayTemp"> {day.temp} </div>

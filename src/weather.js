@@ -12,12 +12,22 @@ export const initialState = {
   }
 
   //actions
-
+  export function setDays(data){
+    return {
+      type: 'UPDATE_WEATHER',
+      payload: data.daily
+    }
+  }
 
 
   //weather reducer 
   export default function reducer (state = initialState , actions){
       switch(actions.type){
+          case 'UPDATE_WEATHER':
+            return {
+              ...state,
+              days: [actions.payload]
+            }
           default:
             return state
       }
