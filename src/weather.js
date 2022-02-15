@@ -60,6 +60,7 @@ export default function reducer(state = initialState, actions) {
             date: new Date(day.dt * 1000).toLocaleDateString('en-US'),
             temp: day.temp.day,
             forecast: day.weather[0].description,
+            img: 'http://openweathermap.org/img/wn/' + day.weather[0].icon + '@2x.png',
           }
         })
       }

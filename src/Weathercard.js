@@ -30,12 +30,13 @@ export default function Weathercard() {
                onChange={changeLocation}/>
         <button type="button" onClick={() => dispatch(setLocation(newLocation))}>Submit</button>
       <div className="WeatherList">
-        {days.map((day) =>
+        {(days.slice(0, 5)).map((day) =>
           <div className="IndividualCard" key={day.date}>
             <div className="DayName"> {day.name} </div>
             <div className="DayDate"> {day.date} </div>
             <div className="DayTemp"> {day.temp} &#x2109; </div>
             <div className="DayForecast"> {day.forecast} </div>
+            <img src= {day.img}></img>
           </div>)}
       </div>
     </div>
