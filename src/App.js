@@ -1,5 +1,6 @@
 import React, {Component} from 'react'
 import './App.css';
+import HourlyWeatherCard from './HourlyWeatherCard';
 import Weathercard from './Weathercard';
 
 function App (){
@@ -12,6 +13,7 @@ function App (){
       <div>
         <Weathercard />
       </div>
+      <HourlyWeatherCard />
     </div>
   );
 }
