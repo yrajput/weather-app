@@ -20,8 +20,7 @@ export default function Weathercard() {
   }
 
   useEffect(() => {
-    console.log("TEST TEST")
-    getWeather()
+    dispatch(getWeather())
   }, [location])
 
   return (
@@ -35,7 +34,7 @@ export default function Weathercard() {
           <div className="IndividualCard" key={day.date}>
             <div className="DayName"> {day.name} </div>
             <div className="DayDate"> {day.date} </div>
-            <div className="DayTemp"> {day.temp} </div>
+            <div className="DayTemp"> {day.temp} &#x2109; </div>
             <div className="DayForecast"> {day.forecast} </div>
           </div>)}
       </div>
