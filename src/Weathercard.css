@@ -16,9 +16,14 @@
     height: auto;
     margin: 20px;
     padding: 10px;
-    background-color: rgba(240, 240, 240, 0.959);
+    color: white;
+    background-color: rgb(102, 102, 102);
 }
 
 .DayDate {
-    color: gray;
+    color: rgb(255, 255, 255);
+}
+
+img {
+    background-color: rgb(23, 23, 255);
 }
