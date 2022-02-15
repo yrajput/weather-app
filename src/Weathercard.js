@@ -22,6 +22,7 @@ export default function Weathercard() {
     //console.log(data);
     //dispatch((setDays(data)))
     //dispatch(setLocation('Chicago'))
+    console.log("location is now", location)
   }, [])
   return (
     <div>

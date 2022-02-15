@@ -12,7 +12,7 @@ export const initialState = {
 
 //actions
 export function setDays(data) {
-  console.log("action hit", data)
+  data.splice(5);
   return {
     type: 'UPDATE_WEATHER',
     payload: data
@@ -26,15 +26,13 @@ export function setLocation(location) {
   }
 }
 
-export const getWeather = async (dispatch, getState) => {
-
+export const getWeather = async (dispatch) => {
   try {
-    const url = 'https://api.openweathermap.org/data/2.5/onecall?lat=33.44&lon=-94.04&exclude=current,minutely,alert,hourly&units=imperial&appid=8230789c2223488861ff99d985309312'
+    const url = 'https://api.openweathermap.org/data/2.5/onecall?lat=41.85&lon=-87.65&exclude=current,minutely,alert,hourly&units=imperial&appid=8230789c2223488861ff99d985309312'
     const response = await fetch(url)
       .then(response => response.json())
-    console.log(response.timezone)
-    dispatch(setLocation("response.timezone"))
-
+    console.log(response.city)
+    dispatch(setDays(response.daily))
   } catch {
     console.log("error");
   }
@@ -48,11 +46,12 @@ export default function reducer(state = initialState, actions) {
       return {
         ...state,
         days: actions.payload.map((day) => {
+          let date = (new Date(day.dt*1000))
           return {
-            name: 'Friday',
-            date: day.dt,
-            temp: day.temp.day,
-            forecast: day.weather.description,
+            name: date.toLocaleString("en-US", {weekday: "long"}),
+            date: date.toLocaleString("en-US", {year: 'numeric', month: 'long', day: 'numeric'}),
+            temp: day.temp.day + '\xB0F',
+            forecast: day.weather[0].description,
           }
         })
       }
