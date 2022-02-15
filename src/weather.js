@@ -12,7 +12,7 @@ export const initialState = {
 
 //actions
 export function setDays(data) {
-  console.log("action hit", data)
+  console.log("Changing data")
   return {
     type: 'UPDATE_WEATHER',
     payload: data
@@ -27,17 +27,31 @@ export function setLocation(location) {
 }
 
 export const getWeather = async (dispatch, getState) => {
-
+  
+  const firstState = getState()
+  const loc = firstState.location
+  console.log(firstState)
   try {
-    const url = 'https://api.openweathermap.org/data/2.5/onecall?lat=33.44&lon=-94.04&exclude=current,minutely,alert,hourly&units=imperial&appid=8230789c2223488861ff99d985309312'
-    const response = await fetch(url)
+    
+    const url = 'https://api.openweathermap.org/data/2.5/weather?q='+loc+'&appid=8230789c2223488861ff99d985309312'
+    const data = await fetch(url)
       .then(response => response.json())
-    console.log(response.timezone)
-    dispatch(setLocation("response.timezone"))
+    const lat = data.coord.lat
+    const long = data.coord.lon
+      try {
+        const url = 'https://api.openweathermap.org/data/2.5/onecall?lat='+lat+'&lon='+long+'&exclude=current,minutely,alert,hourly&units=imperial&appid=8230789c2223488861ff99d985309312'
+        const response = await fetch(url)
+          .then(response => response.json())
+          console.log(response)
+        dispatch(setDays(response.daily))
 
+      } catch {
+        console.log("error");
+      }
   } catch {
     console.log("error");
   }
+  
 }
 
 
@@ -49,10 +63,10 @@ export default function reducer(state = initialState, actions) {
         ...state,
         days: actions.payload.map((day) => {
           return {
-            name: 'Friday',
-            date: day.dt,
+            name: new Date(day.dt * 1000).toLocaleString("en-US", {weekday: "long"}),
+            date: new Date(day.dt * 1000).toDateString(),
             temp: day.temp.day,
-            forecast: day.weather.description,
+            forecast: day.weather[0].description,
           }
         })
       }
@@ -65,6 +79,4 @@ export default function reducer(state = initialState, actions) {
       return state
   }
 }
-
-
 
