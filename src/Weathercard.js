@@ -1,7 +1,6 @@
-import React, { useEffect } from 'react'
+import React, { useEffect,useState } from 'react'
 import './Weathercard.css';
 import { useDispatch, useSelector } from 'react-redux'
-import { GetWeatherData } from './GetWeatherData';
 import { getWeather, setLocation, setDays, setSelectedDay, setHourly, getHourlyWeather } from './weather';
 
 
@@ -17,32 +16,34 @@ export default function Weathercard() {
       selectedDay: state.selectedDay
     }
   })
+  const [newLocation, setNewLocation] = useState(location);
+  const changeLocation = (event) => {
+    setNewLocation(event.target.value);
+  }
+
   useEffect(() => {
-    getWeather()
-    //console.log("after getWeather call: data", setTimeout(data/*.then(result=> result.data)*/, 5000))
-    //console.log(data);
-    //dispatch((setDays(data)))
-    //dispatch(setLocation('Chicago'))
-    //console.log("location is now", location)
-  }, [])
-  
+    dispatch(getWeather())
+  }, [location])
+
   useEffect(() => {
     dispatch(getHourlyWeather())
-
   }, [selectedDay])
   return (
     <div>
       <div className="Location">{location}</div>
+      <input type="text" name="location" value={newLocation}
+               onChange={changeLocation}/>
+        <button type="button" onClick={() => dispatch(setLocation(newLocation))}>Submit</button>
       <div className="WeatherList">
-        {days.map((day) =>
-          <div className="IndividualCard" key={day.name}  onClick={() => {dispatch(setSelectedDay(day.id))}} >
+
+        {(days.slice(0, 5)).map((day) =>
+          <div className="IndividualCard" key={day.date} onClick={() => {dispatch(setSelectedDay(day.id))}}>
             <div className="DayName"> {day.name} </div>
             <div className="DayDate"> {day.date} </div>
-            <div className="DayTemp"> {day.temp} </div>
+            <div className="DayTemp"> {day.temp} &#x2109; </div>
             <div className="DayForecast"> {day.forecast} </div>
-            <div className="DayForecast"> {day.id} </div>
+            <img src= {day.img}></img>
           </div>)}
-      <div>{selectedDay}</div>
       </div>
     </div>
   )

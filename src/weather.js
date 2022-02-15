@@ -1,14 +1,10 @@
 
 export const initialState = {
   days: [
-    { name: 'Monday', date: 'March 1st, 1:00 pm', temp: '79', forecast: 'cloudy' },
-    { name: 'Tuesday', date: 'March 2nd, 1:00 pm', temp: '79', forecast: 'cloudy' },
-    { name: 'Wednesday', date: 'March 3rd, 1:00 pm', temp: '79', forecast: 'cloudy' },
-    { name: 'Thursday', date: 'March 4th, 1:00 pm', temp: '79', forecast: 'cloudy' },
-    { name: 'Friday', date: 'March 5th, 1:00 pm', temp: '79', forecast: 'cloudy' },
+    
   ],
   location: 'Boise, Idaho',
-  selectedDay: 0,
+  selectedDay: undefined,
   hourlyForecast: [ 
     { hour: '', hourlyTemp: '', hourlyCondition: '' }
   ]
@@ -16,7 +12,6 @@ export const initialState = {
 
 //actions
 export function setDays(data) {
-  data.splice(5);
   return {
     type: 'UPDATE_WEATHER',
     payload: data
@@ -59,16 +54,31 @@ export function getHourlyWeather() {return async (dispatch) => {
   }
 }
 
-export const getWeather = async (dispatch) => {
+
+export function getWeather() { return async (dispatch, getState) => {
+  
+  let firstState = getState()
+  const loc = firstState.location
   try {
-    const url = 'https://api.openweathermap.org/data/2.5/onecall?lat=41.85&lon=-87.65&exclude=current,minutely,alert&units=imperial&appid=8230789c2223488861ff99d985309312'
-    const response = await fetch(url)
+    
+    const url = 'https://api.openweathermap.org/data/2.5/weather?q='+loc+'&appid=8230789c2223488861ff99d985309312'
+    const data = await fetch(url)
       .then(response => response.json())
-    dispatch(setDays(response.daily))
-    //dispatch(setHourly(response.hourly))
+    const lat = data.coord.lat
+    const long = data.coord.lon
+      try {
+        const url = 'https://api.openweathermap.org/data/2.5/onecall?lat='+lat+'&lon='+long+'&exclude=current,minutely,alert,hourly&units=imperial&appid=8230789c2223488861ff99d985309312'
+        const response = await fetch(url)
+          .then(response => response.json())
+        dispatch(setDays(response.daily))
+
+      } catch {
+        console.log("error");
+      }
   } catch {
     console.log("error");
   }
+} 
 }
 
 
@@ -85,7 +95,8 @@ export default function reducer(state = initialState, actions) {
             date: date.toLocaleString("en-US", {year: 'numeric', month: 'long', day: 'numeric'}),
             temp: day.temp.day + '\xB0F',
             forecast: day.weather[0].description,
-            id: index
+            id: index,
+            img: 'http://openweathermap.org/img/wn/' + day.weather[0].icon + '@2x.png',
           }
         })
       }
@@ -106,6 +117,7 @@ export default function reducer(state = initialState, actions) {
             hour: index,
             hourlyTemp: hour.temp + '\xB0F',
             hourlyCondition: hour.weather[0].description,
+            img: 'http://openweathermap.org/img/wn/' + hour.weather[0].icon + '@2x.png',
           }
         })
       }
@@ -119,6 +131,4 @@ export default function reducer(state = initialState, actions) {
       return state
   }
 }
-
-
 

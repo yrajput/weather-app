@@ -9,12 +9,13 @@ export default function HourlyWeatherCard() {
 
     return (
         <div>
-            <div className="hourcard">
+            <div className="HourCard">
             {hourlyForecast.map((hour) =>
-                <div className="IndividualCard" key={hour.hour} >
-                <div className="hourTime"> {hour.hour} </div>
-                <div className="hourTemp"> {hour.hourlyTemp} </div>
-                <div className="hourCondition"> {hour.hourlyCondition} </div>
+                <div className="IndividualHourCard" key={hour.hour} >
+                    <div className="hourTime"> {hour.hour} </div>
+                    <div className="hourTemp"> {hour.hourlyTemp} </div>
+                    <div className="hourCondition"> {hour.hourlyCondition} </div>
+                    <img src= {hour.img}></img>
                 </div>)}
             </div>
         </div>
