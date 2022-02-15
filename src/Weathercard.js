@@ -1,17 +1,19 @@
 import React, { useEffect,useState } from 'react'
 import './Weathercard.css';
 import { useDispatch, useSelector } from 'react-redux'
-import { getWeather, setLocation } from './weather';
+import { getWeather, setLocation, setDays, setSelectedDay, setHourly, getHourlyWeather } from './weather';
+
 
 
 export default function Weathercard() {
 
   const dispatch = useDispatch();
 
-  const { days, location } = useSelector((state) => {
+  const { days, location, selectedDay} = useSelector((state) => {
     return {
       days: state.days,
       location: state.location,
+      selectedDay: state.selectedDay
     }
   })
   const [newLocation, setNewLocation] = useState(location);
@@ -23,6 +25,9 @@ export default function Weathercard() {
     dispatch(getWeather())
   }, [location])
 
+  useEffect(() => {
+    dispatch(getHourlyWeather())
+  }, [selectedDay])
   return (
     <div>
       <div className="Location">{location}</div>
@@ -30,8 +35,9 @@ export default function Weathercard() {
                onChange={changeLocation}/>
         <button type="button" onClick={() => dispatch(setLocation(newLocation))}>Submit</button>
       <div className="WeatherList">
+
         {(days.slice(0, 5)).map((day) =>
-          <div className="IndividualCard" key={day.date}>
+          <div className="IndividualCard" key={day.date} onClick={() => {dispatch(setSelectedDay(day.id))}}>
             <div className="DayName"> {day.name} </div>
             <div className="DayDate"> {day.date} </div>
             <div className="DayTemp"> {day.temp} &#x2109; </div>

@@ -24,6 +24,27 @@
     color: rgb(255, 255, 255);
 }
 
+.IndividualHourCard {
+    display: inline-flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.HourCard {
+    width: 965px;
+    /* height: 500px; */
+    flex-wrap: wrap;
+    justify-content: space-between;
+    /* align-items: center; */
+    gap: 50px;
+    /* padding-left: 150px; */
+    /* padding-right: 18%; */
+    margin: auto;
+    /* flex-direction: row; */
+    align-content: center;
+}
+
 img {
     background-color: rgb(23, 23, 255);
 }
