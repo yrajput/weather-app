@@ -30,7 +30,7 @@
 .IndividualHourCard {
     display: inline-flex;
     flex-direction: column;
-    /* justify-content: space-around; */
+    justify-content: space-between;
     align-items: center;
     flex-wrap: wrap;
     align-content: center;
@@ -55,7 +55,7 @@ img {
     background-color: rgba(46, 46, 255, 0.397);
 }
 
-img.hourImg {
+img.hourImage {
     height: 50px;
     width: 50px;
     background-color: rgba(46, 46, 255, 0.699);

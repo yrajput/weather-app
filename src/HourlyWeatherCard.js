@@ -15,7 +15,7 @@ export default function HourlyWeatherCard() {
             <div className="hourTime"> {hour.hour} </div>
             <div className="hourTemp"> {hour.hourlyTemp} </div>
             <div className="hourCondition"> {hour.hourlyCondition} </div>
-            <img className="HourImage" src={hour.img}></img>
+            <img className="hourImage" src={hour.img}></img>
           </div>
         ))}
       </div>
