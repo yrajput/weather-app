@@ -62,7 +62,7 @@ export default function Weathercard() {
           >
             <div className="DayName"> {day.name} </div>
             <div className="DayDate"> {day.date} </div>
-            <div className="DayTemp"> {day.temp} &#x2109; </div>
+            <div className="DayTemp"> {day.temp} </div>
             <div className="DayForecast"> {day.forecast} </div>
             <img src={day.img}></img>
           </div>

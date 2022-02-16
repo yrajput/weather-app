@@ -142,6 +142,7 @@ export default function reducer(state = initialState, actions) {
         hourlyForecast: hourlyData.map((hour) => {
           let time = new Date(hour.dt * 1000);
           return {
+
             hour: time.toLocaleTimeString("en-US", {
               hour: "2-digit",
               minute: "2-digit",
