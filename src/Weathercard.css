@@ -20,6 +20,7 @@
     padding: 10px;
     color: white;
     background-color: rgb(102, 102, 102);
+    border-color: black;
 }
 
 .DayDate {
@@ -29,7 +30,7 @@
 .IndividualHourCard {
     display: inline-flex;
     flex-direction: column;
-    justify-content: space-around;
+    /* justify-content: space-around; */
     align-items: center;
     flex-wrap: wrap;
     align-content: center;

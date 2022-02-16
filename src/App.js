@@ -1,10 +1,9 @@
-import React, {Component} from 'react'
-import './App.css';
-import HourlyWeatherCard from './HourlyWeatherCard';
-import Weathercard from './Weathercard';
+import React, { Component } from "react";
+import "./App.css";
+import HourlyWeatherCard from "./HourlyWeatherCard";
+import Weathercard from "./Weathercard";
 
-function App (){
-  
+function App() {
   return (
     <div className="App">
       <header>
@@ -17,7 +16,5 @@ function App (){
     </div>
   );
 }
-
-
 
 export default App;
