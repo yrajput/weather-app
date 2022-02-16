@@ -18,6 +18,7 @@
     padding: 10px;
     color: white;
     background-color: rgb(102, 102, 102);
+    border-color: black;
 }
 
 .DayDate {
@@ -27,8 +28,16 @@
 .IndividualHourCard {
     display: inline-flex;
     flex-direction: column;
-    justify-content: space-around;
+    /* justify-content: space-around; */
     align-items: center;
+    background-color: rgb(102, 102, 102);
+    padding: 16px;
+    margin: 10px;
+    width: 100px;
+    height: 148px;
+    border: solid;
+    border-color: gray;
+
 }
 
 .HourCard {
@@ -46,5 +55,6 @@
 }
 
 img {
-    background-color: rgb(23, 23, 255);
+    background-color: rgb(102, 102, 102);
+    max-width: 80px;
 }
