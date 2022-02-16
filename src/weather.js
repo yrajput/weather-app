@@ -1,13 +1,14 @@
 
 export const initialState = {
-  days: [
-    
-  ],
+  days: [ ],
   location: 'Boise, Idaho',
   selectedDay: undefined,
-  hourlyForecast: [ 
+  hourlyForecast: [ ],
+  coords: {
+    lat: 43.6135,
+    long: -116.2035,
+  }
 
-  ],
 }
 
 //actions
@@ -39,55 +40,54 @@ export function setSelectedDay(day) {
   }
 }
 
+export function setLatLon(lat, lon) {
+  return {
+    type: 'UPDATE_LAT_LON',
+    payload: {lat: lat, lon: lon},
+  }
+}
+
+export function getCoords() { return async(dispatch, getState) => {
+    let firstState = getState()
+    const loc = firstState.location
+    try {
+      const url = 'https://api.openweathermap.org/data/2.5/weather?q='+loc+'&appid=8230789c2223488861ff99d985309312'
+      const data = await fetch(url)
+        .then(response => response.json())
+      const lat = data.coord.lat
+      const long = data.coord.lon
+      dispatch(setLatLon(lat, long))
+    } catch {
+      console.log("coords error")
+    }
+  }
+}
+
 export function getHourlyWeather() {return async (dispatch, getState) => {
   let firstState = getState()
-  const loc = firstState.location
-  try {
-    
-    const url = 'https://api.openweathermap.org/data/2.5/weather?q='+loc+'&appid=8230789c2223488861ff99d985309312'
-    const data = await fetch(url)
-      .then(response => response.json())
-    const lat = data.coord.lat
-    const long = data.coord.lon
     try {
-        const url = 'https://api.openweathermap.org/data/2.5/onecall?lat='+lat+'&lon='+long+'&exclude=current,minutely,alert&units=imperial&appid=8230789c2223488861ff99d985309312'
+        const url = 'https://api.openweathermap.org/data/2.5/onecall?lat='+firstState.coords.lat+'&lon='+firstState.coords.long+'&exclude=current,minutely,alert&units=imperial&appid=8230789c2223488861ff99d985309312'
         const response = await fetch(url)
           .then(response => response.json())
         dispatch(setHourly(response.hourly))
       } catch {
         console.log("error for hourly");
       }
-    } catch {
-      console.log("error")
-    }
   }
 }
 
 
 export function getWeather() { return async (dispatch, getState) => {
-  
   let firstState = getState()
-  const loc = firstState.location
-  try {
-    
-    const url = 'https://api.openweathermap.org/data/2.5/weather?q='+loc+'&appid=8230789c2223488861ff99d985309312'
-    const data = await fetch(url)
-      .then(response => response.json())
-    const lat = data.coord.lat
-    const long = data.coord.lon
-      try {
-        const url = 'https://api.openweathermap.org/data/2.5/onecall?lat='+lat+'&lon='+long+'&exclude=current,minutely,alert,hourly&units=imperial&appid=8230789c2223488861ff99d985309312'
-        const response = await fetch(url)
-          .then(response => response.json())
-        dispatch(setDays(response.daily))
-
-      } catch {
-        console.log("error");
-      }
-  } catch {
-    console.log("error");
-  }
-} 
+    try {
+      const url = 'https://api.openweathermap.org/data/2.5/onecall?lat='+firstState.coords.lat+'&lon='+firstState.coords.long+'&exclude=current,minutely,alert,hourly&units=imperial&appid=8230789c2223488861ff99d985309312'
+      const response = await fetch(url)
+        .then(response => response.json())
+      dispatch(setDays(response.daily))
+    } catch {
+      console.log("error");
+    }
+  } 
 }
 
 
@@ -117,13 +117,11 @@ export default function reducer(state = initialState, actions) {
       }
     case 'UPDATE_HOURLY':
       const startingIndex = state.selectedDay * 24
-      const hourlyData = actions.payload.slice(startingIndex, startingIndex+24)
-      
+      const hourlyData = actions.payload.slice(startingIndex, startingIndex+24) 
       return {
         ...state,
         hourlyForecast: hourlyData.map((hour) => {
           let time = (new Date(hour.dt*1000))
-          console.log(time)
           return {
             hour: time.toLocaleTimeString("en-US", { hour: '2-digit', minute: '2-digit'}),
             hourlyTemp: hour.temp + '\xB0F',
@@ -142,6 +140,14 @@ export default function reducer(state = initialState, actions) {
         return {
           ...state,
           selectedDay: actions.payload,
+        }
+      }
+    case 'UPDATE_LAT_LON':
+      return {
+        ...state,
+        coords: {
+          lat: actions.payload.lat,
+          long: actions.payload.lon,
         }
       }
     default:

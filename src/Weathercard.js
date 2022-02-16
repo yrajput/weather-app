@@ -1,7 +1,7 @@
 import React, { useEffect,useState } from 'react'
 import './Weathercard.css';
 import { useDispatch, useSelector } from 'react-redux'
-import { getWeather, setLocation, setDays, setSelectedDay, setHourly, getHourlyWeather } from './weather';
+import { getWeather, setLocation, setDays, setSelectedDay, setHourly, getHourlyWeather, getCoords } from './weather';
 
 
 
@@ -9,11 +9,12 @@ export default function Weathercard() {
 
   const dispatch = useDispatch();
 
-  const { days, location, selectedDay } = useSelector((state) => {
+  const { days, location, selectedDay, coords } = useSelector((state) => {
     return {
       days: state.days,
       location: state.location,
-      selectedDay: state.selectedDay
+      selectedDay: state.selectedDay,
+      coords: state.coords,
     }
   })
   const [newLocation, setNewLocation] = useState(location);
@@ -23,7 +24,7 @@ export default function Weathercard() {
 
   useEffect(() => {
     dispatch(getWeather())
-  }, [location])
+  }, [coords])
 
   useEffect(() => {
     dispatch(getHourlyWeather())
@@ -34,7 +35,7 @@ export default function Weathercard() {
       <div className="Location">{location}</div>
       <input type="text" name="location" value={newLocation}
                onChange={changeLocation}/>
-        <button type="button" onClick={() => dispatch(setLocation(newLocation))}>Submit</button>
+        <button type="button" onClick={() => {dispatch(setLocation(newLocation)); dispatch(getCoords())}}>Submit</button>
       <div className="WeatherList">
 
         {(days.slice(0, 5)).map((day) =>

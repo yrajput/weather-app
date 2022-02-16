@@ -5,7 +5,7 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import store from './redux';
 import { Provider } from 'react-redux'
-import { getHourlyWeather, getWeather } from './weather';
+import { getCoords, getHourlyWeather, getWeather } from './weather';
 
 
 ReactDOM.render(
@@ -19,5 +19,4 @@ ReactDOM.render(
 // to log results (for example: reportWebVitals(console.log))
 // or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
 reportWebVitals();
-store.dispatch(getWeather)
-store.dispatch(getHourlyWeather)
+store.dispatch(getWeather, getHourlyWeather, getCoords)
