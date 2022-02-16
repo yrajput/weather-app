@@ -9,7 +9,7 @@ export default function Weathercard() {
 
   const dispatch = useDispatch();
 
-  const { days, location, selectedDay} = useSelector((state) => {
+  const { days, location, selectedDay } = useSelector((state) => {
     return {
       days: state.days,
       location: state.location,
@@ -28,6 +28,7 @@ export default function Weathercard() {
   useEffect(() => {
     dispatch(getHourlyWeather())
   }, [selectedDay])
+
   return (
     <div>
       <div className="Location">{location}</div>
@@ -37,7 +38,7 @@ export default function Weathercard() {
       <div className="WeatherList">
 
         {(days.slice(0, 5)).map((day) =>
-          <div className="IndividualCard" key={day.date} onClick={() => {dispatch(setSelectedDay(day.id))}}>
+          <div className="IndividualCard" key={day.date} onClick={() => dispatch(setSelectedDay(day.id))}>
             <div className="DayName"> {day.name} </div>
             <div className="DayDate"> {day.date} </div>
             <div className="DayTemp"> {day.temp} &#x2109; </div>
