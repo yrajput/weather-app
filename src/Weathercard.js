@@ -40,7 +40,7 @@ export default function Weathercard() {
           <div className="IndividualCard" key={day.date} onClick={() => {dispatch(setSelectedDay(day.id))}}>
             <div className="DayName"> {day.name} </div>
             <div className="DayDate"> {day.date} </div>
-            <div className="DayTemp"> {day.temp} &#x2109; </div>
+            <div className="DayTemp"> {day.temp} </div>
             <div className="DayForecast"> {day.forecast} </div>
             <img src= {day.img}></img>
           </div>)}

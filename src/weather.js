@@ -115,6 +115,7 @@ export default function reducer(state = initialState, actions) {
         hourlyForecast: hourlyArray.map((hour, index) => {
           return {
             hour: index,
+            time: new Date(hour.dt).toLocaleString("en-US", {year: 'numeric', month: 'long', day: 'numeric'}),
             hourlyTemp: hour.temp + '\xB0F',
             hourlyCondition: hour.weather[0].description,
             img: 'http://openweathermap.org/img/wn/' + hour.weather[0].icon + '@2x.png',

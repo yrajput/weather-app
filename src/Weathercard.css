@@ -3,7 +3,9 @@
     display: flex;
     flex-direction: row;
     justify-content: center;
+    flex-wrap: wrap;
 }
+
 
 .Location {
     justify-content: center;
@@ -29,22 +31,31 @@
     flex-direction: column;
     justify-content: space-around;
     align-items: center;
+    flex-wrap: wrap;
+    align-content: center;
+    padding: 20px;
+    height: 140px;
+    width: 100px;
 }
 
 .HourCard {
-    width: 965px;
+    width: 80%;
     /* height: 500px; */
     flex-wrap: wrap;
     justify-content: space-between;
-    /* align-items: center; */
+    align-items: center;
     gap: 50px;
-    /* padding-left: 150px; */
-    /* padding-right: 18%; */
     margin: auto;
-    /* flex-direction: row; */
+    flex-direction: row;
     align-content: center;
 }
 
 img {
-    background-color: rgb(23, 23, 255);
+    background-color: rgba(46, 46, 255, 0.397);
+}
+
+img.hourImg {
+    height: 50px;
+    width: 50px;
+    background-color: rgba(46, 46, 255, 0.699);
 }
