@@ -101,7 +101,7 @@ export default function reducer(state = initialState, actions) {
             img: 'http://openweathermap.org/img/wn/' + day.weather[0].icon + '@2x.png',
           }
         }),
-        selectedDay: undefined
+        selectedDay: undefined,
         hourlyData: actions.payload.hourly,
       }
     case 'UPDATE_LOCATION':
