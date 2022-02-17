@@ -1,14 +1,11 @@
 import Autocomplete from './autocomplete';
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import "./Weathercard.css";
 import { useDispatch, useSelector } from "react-redux";
 import HourlyWeatherCard from './HourlyWeatherCard';
 import {
   getWeather,
-  setLocation,
-  setDays,
   setSelectedDay,
-  setHourly,
   getHourlyWeather,
 } from "./weather";
 
@@ -26,15 +23,17 @@ const { days, location, selectedDay, } = useSelector((state) => {
 
   useEffect(() => {
     dispatch(getWeather());
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location]);
 
   useEffect(() => {
     dispatch(getHourlyWeather());
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedDay]);
 
   return (
     <div>
-      <div className="Location">{location}</div>
+      
       <Autocomplete />
       <div className="WeatherList">
         {(days.slice(0, 5)).map((day) =>
@@ -43,7 +42,7 @@ const { days, location, selectedDay, } = useSelector((state) => {
             <div className="DayDate"> {day.date} </div>
             <div className="DayTemp"> {day.temp} </div>
             <div className="DayForecast"> {day.forecast} </div>
-            <img src={day.img}></img>
+            <img src={day.img} alt="weather"></img>
           </div>)}
       </div>
       <HourlyWeatherCard/>

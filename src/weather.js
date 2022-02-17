@@ -85,46 +85,20 @@ export function getWeather() {
   return async (dispatch, getState) => {
 
     let firstState = getState()
-    const loc = firstState.location
     const lat = firstState.lat
     const long = firstState.long
-    console.log("firststate")
-    console.log(firstState)
     try {
-      const url = 'https://api.openweathermap.org/data/2.5/onecall?lat=' + lat + '&lon=' + long + '&exclude=current,minutely,alert,hourly&units=imperial&appid=1a13d17aac6980fdbd320530b0d4ab6a'
+      const url = 'https://api.openweathermap.org/data/2.5/onecall?lat=' + lat + '&lon=' + long + '&exclude=current,minutely,alert&units=imperial&appid=1a13d17aac6980fdbd320530b0d4ab6a'
       const response = await fetch(url)
         .then(response => response.json())
-      console.log("get weather response")
-      console.log(response)
       dispatch(setDays(response.daily))
-
+      dispatch(setHourly(response.hourly))
     } catch {
       console.log("error");
     }
   }
 
 }
-
-/*
-export function getWeather() {
-  return async (dispatch, getState) => {
-    let firstState = getState();
-    try {
-      const url =
-        "https://api.openweathermap.org/data/2.5/onecall?lat=" +
-        firstState.coords.lat +
-        "&lon=" +
-        firstState.coords.long +
-        "&exclude=current,minutely,alert,hourly&units=imperial&appid=8230789c2223488861ff99d985309312";
-      const response = await fetch(url).then((response) => response.json());
-      dispatch(setDays(response.daily));
-    } catch {
-      console.log("error");
-    }
-  };
-}
-
-*/
 
 //weather reducer 
 
@@ -153,10 +127,8 @@ export default function reducer(state = initialState, actions) {
         location: actions.payload
       }
     case 'UPDATE_HOURLY':
-      const startingIndex = state.selectedDay * 23
-      //console.log("starting index", startingIndex)
+      const startingIndex = state.selectedDay * 24
       const hourlyArray = actions.payload.slice(startingIndex, startingIndex + 24)
-      // console.log(actions.payload)
       return {
         ...state,
         hourlyForecast: hourlyArray.map((hour) => {
@@ -190,20 +162,17 @@ export default function reducer(state = initialState, actions) {
       }
 
     case 'UPDATE_SELECTED_DAY':
-      //console.log("In updated Selected day")
       return {
         ...state,
         selectedDay: actions.payload,
       }
     case 'UPDATE_LATITUDE':
-      //console.log("In updated Selected day")
       return {
         ...state,
         lat: actions.payload,
       }
 
     case 'UPDATE_LONGITUDE':
-      //console.log("In updated Selected day")
       return {
         ...state,
         long: actions.payload,
