@@ -7,6 +7,7 @@ import {
   getWeather,
   setSelectedDay,
   displayHourlyData,
+  getLocation,
 } from "./weather";
 
 export default function Weathercard() {
@@ -21,6 +22,7 @@ const { days, location, selectedDay, } = useSelector((state) => {
     }
   });
 
+ 
   useEffect(() => {
     dispatch(getWeather());
     // eslint-disable-next-line react-hooks/exhaustive-deps

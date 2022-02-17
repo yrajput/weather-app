@@ -1,10 +1,10 @@
 export const initialState = {
   days: [],
-  location: "Boise, Idaho",
+  location: "",
   selectedDay: undefined,
   hourlyForecast: [],
-  lat: 43.615,
-  long: -116.2023,
+  lat: undefined,
+  long: undefined,
   hourlyData: undefined,
 };
 
@@ -31,6 +31,7 @@ export function setLatitude(latitude) {
 }
 
 export function setLongitude(longitude) {
+  console.log("action", longitude)
   return {
     type: "UPDATE_LONGITUDE",
     payload: longitude,
@@ -58,16 +59,45 @@ export function displayHourlyData() {
   };
 }
 
+
+export const getLocation = () => {
+  return new Promise((resolve, dispatch) =>
+    window.navigator.geolocation.getCurrentPosition(
+      (loc) => {resolve(loc);
+    
+      dispatch(setLatitude(loc.coords.latitude));
+      dispatch(setLongitude(loc.coords.longitude));
+      console.log(loc.coords.latitude) },
+        (err) => resolve(undefined)
+        )
+      );
+    };
+
+
+
 export function getWeather() {
   return async (dispatch, getState) => {
+    let url = "";
     let state = getState();
-    try {
-      const url =
+    if (!state.lat && !state.long) {
+      const l = await getLocation();
+      url =
         "https://api.openweathermap.org/data/2.5/onecall?lat=" +
-        state.lat +
+        l.coords.latitude +
         "&lon=" +
-        state.long +
+        l.coords.longitude +
         "&exclude=current,minutely,alert&units=imperial&appid=1c5699f9ad63ee93400478e17fbacb18";
+    } else {
+      url =
+      "https://api.openweathermap.org/data/2.5/onecall?lat=" +
+      state.lat +
+      "&lon=" +
+      state.long +
+      "&exclude=current,minutely,alert&units=imperial&appid=1c5699f9ad63ee93400478e17fbacb18";
+    }
+    state = getState();
+    try {
+      console.log("state long", state.long)
       const response = await fetch(url).then((response) => response.json());
       dispatch(setWeather(response));
       console.log("called api");
