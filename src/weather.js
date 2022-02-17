@@ -51,6 +51,7 @@ export function setCitySuggestions(data) {
   };
 }
 
+
 export function displayHourlyData() {
   return {
     type: "DISPLAY_HOURLY_DATA",
@@ -78,6 +79,7 @@ export function getWeather() {
 
 //weather reducer
 
+
 export default function reducer(state = initialState, actions) {
   switch (actions.type) {
     case "UPDATE_WEATHER":
@@ -96,15 +98,17 @@ export default function reducer(state = initialState, actions) {
             temp: Math.round(day.temp.day) + "\xB0F",
             forecast: day.weather[0].description,
             id: index,
-            img:
-              "http://openweathermap.org/img/wn/" +
-              day.weather[0].icon +
-              "@2x.png",
-          };
+            img: 'http://openweathermap.org/img/wn/' + day.weather[0].icon + '@2x.png',
+          }
         }),
-        selectedDay: undefined,
+        selectedDay: undefined
         hourlyData: actions.payload.hourly,
-      };
+      }
+    case 'UPDATE_LOCATION':
+      return {
+        ...state,
+        location: actions.payload
+      }
     case "UPDATE_LOCATION":
       return {
         ...state,
@@ -149,7 +153,8 @@ export default function reducer(state = initialState, actions) {
           selectedDay: actions.payload,
         };
       }
-    case "UPDATE_LATITUDE":
+    case 'UPDATE_LATITUDE':
+
       return {
         ...state,
         lat: actions.payload,

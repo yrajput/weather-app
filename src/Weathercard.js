@@ -23,15 +23,17 @@ const { days, location, selectedDay, } = useSelector((state) => {
 
   useEffect(() => {
     dispatch(getWeather());
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location]);
 
   useEffect(() => {
     dispatch(displayHourlyData());
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedDay]);
 
   return (
     <div>
-      <div className="Location">{location}</div>
+      
       <Autocomplete />
       <div className="WeatherList">
         {(days.slice(0, 5)).map((day) =>
@@ -40,7 +42,7 @@ const { days, location, selectedDay, } = useSelector((state) => {
             <div className="DayDate"> {day.date} </div>
             <div className="DayTemp"> {day.temp} </div>
             <div className="DayForecast"> {day.forecast} </div>
-            <img src={day.img}></img>
+            <img src={day.img} alt="weather"></img>
           </div>)}
       </div>
       <HourlyWeatherCard/>
