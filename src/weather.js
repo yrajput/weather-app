@@ -67,7 +67,7 @@ export function getWeather() {
         state.lat +
         "&lon=" +
         state.long +
-        "&exclude=current,minutely,alert&units=imperial&appid=1a13d17aac6980fdbd320530b0d4ab6a";
+        "&exclude=current,minutely,alert&units=imperial&appid=1c5699f9ad63ee93400478e17fbacb18";
       const response = await fetch(url).then((response) => response.json());
       dispatch(setWeather(response));
       console.log("called api");
