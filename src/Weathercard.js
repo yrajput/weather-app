@@ -1,12 +1,10 @@
 import Autocomplete from './autocomplete';
-import React, { useEffect, useState } from "react";
+import React, { useEffect, } from "react";
 import "./Weathercard.css";
 import { useDispatch, useSelector } from "react-redux";
 import HourlyWeatherCard from './HourlyWeatherCard';
 import {
   getWeather,
-  setLocation,
-  setDays,
   setSelectedDay,
   displayHourlyData,
 } from "./weather";
@@ -15,13 +13,11 @@ export default function Weathercard() {
   const dispatch = useDispatch();
 
 
-const { days, location, selectedDay, hourlyData, hourlyForecast} = useSelector((state) => {
+const { days, location, selectedDay, } = useSelector((state) => {
     return {
       days: state.days,
       location: state.location,
       selectedDay: state.selectedDay,
-      hourlyData: state.hourlyData,
-      hourlyForecast: state.hourlyForecast
     }
   });
 

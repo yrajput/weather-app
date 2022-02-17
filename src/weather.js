@@ -10,7 +10,6 @@ export const initialState = {
 
 //actions
 export function setWeather(data) {
-  console.log("actions payload", data);
   return {
     type: "UPDATE_WEATHER",
     payload: data,
@@ -54,25 +53,9 @@ export function setCitySuggestions(data) {
 
 export function displayHourlyData() {
   return {
-    type: "UPDATE_ONE_DAY_HOURLY",
+    type: "DISPLAY_HOURLY_DATA",
   };
 }
-
-/*
-export function getHourlyWeather() {
-  return async (dispatch, getState) => {
-    let firstState = getState()
-    try {
-      const url = 'https://api.openweathermap.org/data/2.5/onecall?lat=' + firstState.lat + '&lon=' + firstState.long + '&exclude=current,minutely,alert&units=imperial&appid=1a13d17aac6980fdbd320530b0d4ab6a'
-      const response = await fetch(url)
-        .then(response => response.json())
-      dispatch(setHourlyData(response.hourly))
-    } catch {
-      console.log("hourly error");
-    }
-  };
-}
-*/
 
 export function getWeather() {
   return async (dispatch, getState) => {
@@ -127,9 +110,8 @@ export default function reducer(state = initialState, actions) {
         ...state,
         location: actions.payload,
       };
-    case "UPDATE_ONE_DAY_HOURLY":
+    case "DISPLAY_HOURLY_DATA":
       const startingIndex = state.selectedDay * 24;
-      console.log("starting index", startingIndex);
       if (state.hourlyData !== undefined) {
         const hourlyArray = state.hourlyData.slice(startingIndex, startingIndex + 24);
         return {
@@ -138,7 +120,7 @@ export default function reducer(state = initialState, actions) {
             let time = new Date(hour.dt * 1000);
             return {
               hour: time.toLocaleTimeString("en-US", {
-                hour: "2-digit",
+                hour: "numeric",
                 minute: "2-digit",
               }),
               hourlyTemp: Math.round(hour.temp) + "\xB0F",
@@ -168,14 +150,12 @@ export default function reducer(state = initialState, actions) {
         };
       }
     case "UPDATE_LATITUDE":
-      //console.log("In updated Selected day")
       return {
         ...state,
         lat: actions.payload,
       };
 
     case "UPDATE_LONGITUDE":
-      //console.log("In updated Selected day")
       return {
         ...state,
         long: actions.payload,
