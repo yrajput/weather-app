@@ -26,15 +26,11 @@ export default function Autocomplete() {
           userInput +
           ".json?types=place&language=en&worldview=us&access_token=pk.eyJ1IjoiaXZhbi1wYW50b2phIiwiYSI6ImNrenB0emU1cDE4Zjcydm1nNXlvMXF4NXkifQ.MrczoaoGDAg8fw4FJK90wA";
         const response = await fetch(url).then((response) => response.json());
-        if(response){
-          setReceivedSuggestions(response.features);
-        }
-        
+        setReceivedSuggestions(response.features);
         } catch {
       console.log("error in autocomplete, getCitySuggestions");
     }
   };
-    
   }
 
   function clearLocation() {
