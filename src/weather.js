@@ -64,21 +64,17 @@ export function setCitySuggestions(data) {
   }
 }
 
+
 export function getHourlyWeather() {
   return async (dispatch, getState) => {
     let firstState = getState()
-    const lat = firstState.lat
-    const long = firstState.long
     try {
-      //console.log("in hourly Call")
-      const url = 'https://api.openweathermap.org/data/2.5/onecall?lat=' + lat + '&lon=' + long + '&exclude=current,minutely,alert&units=imperial&appid=1a13d17aac6980fdbd320530b0d4ab6a'
+      const url = 'https://api.openweathermap.org/data/2.5/onecall?lat=' + firstState.lat + '&lon=' + firstState.long + '&exclude=current,minutely,alert&units=imperial&appid=1a13d17aac6980fdbd320530b0d4ab6a'
       const response = await fetch(url)
         .then(response => response.json())
-      //dispatch(setDays(response.daily))
-      console.log(response)
       dispatch(setHourly(response.hourly))
     } catch {
-      console.log("coords error");
+      console.log("hourly error");
     }
   };
 }
@@ -143,7 +139,7 @@ export default function reducer(state = initialState, actions) {
           return {
             name: date.toLocaleString("en-US", { weekday: "long" }),
             date: date.toLocaleString("en-US", { year: 'numeric', month: 'long', day: 'numeric' }),
-            temp: day.temp.day + '\xB0F',
+            temp: Math.round(day.temp.day) + '\xB0F',
             forecast: day.weather[0].description,
             id: index,
             img: 'http://openweathermap.org/img/wn/' + day.weather[0].icon + '@2x.png',
@@ -171,7 +167,7 @@ export default function reducer(state = initialState, actions) {
               hour: "2-digit",
               minute: "2-digit",
             }),
-            hourlyTemp: hour.temp + "\xB0F",
+            hourlyTemp: Math.round(hour.temp) + "\xB0F",
             hourlyCondition: hour.weather[0].description,
             img:
               "http://openweathermap.org/img/wn/" +

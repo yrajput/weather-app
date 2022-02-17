@@ -12,7 +12,6 @@ function App() {
       <div>
         <Weathercard />
       </div>
-      <HourlyWeatherCard />
     </div>
   );
 }
