@@ -43,9 +43,6 @@ const { days, location, selectedDay, } = useSelector((state) => {
       <div className="Location">{location}</div>
 
       <Autocomplete />
-      <input type="text" name="location" value={newLocation}
-        onChange={changeLocation} />
-      <button type="button" onClick={() => dispatch(setLocation(newLocation))}>Submit</button>
       <div className="WeatherList">
 
         {(days.slice(0, 5)).map((day) =>

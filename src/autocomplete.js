@@ -63,7 +63,7 @@ export default function Autocomplete() {
         dispatch(setLatitude(receivedSuggestions[index].center[1]))
         dispatch(setLongitude(receivedSuggestions[index].center[0]))
 
-
+        setShowSuggestions(false)
 
 
 
