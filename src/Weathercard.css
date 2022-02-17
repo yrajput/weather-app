@@ -48,3 +48,39 @@
 img {
     background-color: rgb(23, 23, 255);
 }
+
+
+.no-suggestions {
+  color: #999;
+  padding: 0.5rem;
+}
+
+.suggestions {
+
+  display: flex;
+flex-direction: column;
+  border: 1px solid #999;
+  border-top-width: 0;
+  list-style: none;
+  max-height: 143px;
+  overflow-y: auto;
+  padding-left: 0;
+  margin:auto;
+  width: calc(300px + 1rem);
+}
+
+.suggestions li {
+  padding: 0.5rem;
+}
+
+.suggestion-active,
+.suggestions li:hover {
+  background-color: #a3b5b9;
+  color: #3259da79;
+  cursor: pointer;
+  font-weight: 700;
+}
+
+.suggestions li:not(:last-of-type) {
+  border-bottom: 1px solid #999;
+}

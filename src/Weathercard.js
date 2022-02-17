@@ -1,7 +1,8 @@
-import React, { useEffect,useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import './Weathercard.css';
 import { useDispatch, useSelector } from 'react-redux'
 import { getWeather, setLocation, setDays, setSelectedDay, setHourly, getHourlyWeather } from './weather';
+import Autocomplete from './autocomplete';
 
 
 
@@ -9,11 +10,13 @@ export default function Weathercard() {
 
   const dispatch = useDispatch();
 
-  const { days, location, selectedDay} = useSelector((state) => {
+  const { days, location, selectedDay } = useSelector((state) => {
     return {
       days: state.days,
       location: state.location,
-      selectedDay: state.selectedDay
+      selectedDay: state.selectedDay,
+      longitude: state.longitude,
+      latitude: state.latitude
     }
   })
   const [newLocation, setNewLocation] = useState(location);
@@ -31,18 +34,19 @@ export default function Weathercard() {
   return (
     <div>
       <div className="Location">{location}</div>
+      <Autocomplete />
       <input type="text" name="location" value={newLocation}
-               onChange={changeLocation}/>
-        <button type="button" onClick={() => dispatch(setLocation(newLocation))}>Submit</button>
+        onChange={changeLocation} />
+      <button type="button" onClick={() => dispatch(setLocation(newLocation))}>Submit</button>
       <div className="WeatherList">
 
         {(days.slice(0, 5)).map((day) =>
-          <div className="IndividualCard" key={day.date} onClick={() => {dispatch(setSelectedDay(day.id))}}>
+          <div className="IndividualCard" key={day.date} onClick={() => { dispatch(setSelectedDay(day.id)) }}>
             <div className="DayName"> {day.name} </div>
             <div className="DayDate"> {day.date} </div>
             <div className="DayTemp"> {day.temp} &#x2109; </div>
             <div className="DayForecast"> {day.forecast} </div>
-            <img src= {day.img}></img>
+            <img src={day.img}></img>
           </div>)}
       </div>
     </div>
