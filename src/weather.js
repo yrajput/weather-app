@@ -3,13 +3,13 @@ export const initialState = {
   days: [
 
   ],
-  location: 'Boise, Idaho',
+  location: '',
   selectedDay: undefined,
   hourlyForecast: [
     { hour: '', hourlyTemp: '', hourlyCondition: '' }
   ],
-  lat: 43.6150,
-  long: -116.2023
+  lat: undefined,
+  long: undefined
 }
 
 
@@ -79,52 +79,56 @@ export function getHourlyWeather() {
   };
 }
 
-
-
 export function getWeather() {
   return async (dispatch, getState) => {
 
     let firstState = getState()
     const loc = firstState.location
-    const lat = firstState.lat
-    const long = firstState.long
-    console.log("firststate")
-    console.log(firstState)
-    try {
-      const url = 'https://api.openweathermap.org/data/2.5/onecall?lat=' + lat + '&lon=' + long + '&exclude=current,minutely,alert,hourly&units=imperial&appid=1a13d17aac6980fdbd320530b0d4ab6a'
-      const response = await fetch(url)
-        .then(response => response.json())
-      console.log("get weather response")
-      console.log(response)
-      dispatch(setDays(response.daily))
+    let lat = firstState.lat
+    let long = firstState.long
 
-    } catch {
-      console.log("error");
-    }
+
+    if(!lat && !long){
+      window.navigator.geolocation.getCurrentPosition(
+        async position => {
+          //dispatch(setLatitude(position.coords.latitude))
+          //dispatch(setLongitude(position.coords.longitude))
+          console.log("Position is " + position.coords.longitude)
+          const url = 'https://api.openweathermap.org/data/2.5/onecall?lat=' + position.coords.latitude + '&lon=' + position.coords.longitude + '&exclude=current,minutely,alert,hourly&units=imperial&appid=1a13d17aac6980fdbd320530b0d4ab6a'
+          console.log(url)
+          const response = await fetch(url)
+            .then(response => response.json())
+          console.log("get weather response")
+          console.log(response)
+          dispatch(setDays(response.daily))
+        },
+        err => {
+          console.log("Cannot get current location")
+        }
+      );
+    } else{
+
+        firstState = getState()
+        lat = firstState.lat
+        long = firstState.long
+
+        console.log("firststate")
+        console.log(firstState)
+        try {
+          const url = 'https://api.openweathermap.org/data/2.5/onecall?lat=' + lat + '&lon=' + long + '&exclude=current,minutely,alert,hourly&units=imperial&appid=1a13d17aac6980fdbd320530b0d4ab6a'
+          const response = await fetch(url)
+            .then(response => response.json())
+          console.log("get weather response")
+          console.log(response)
+          dispatch(setDays(response.daily))
+
+        } catch {
+          console.log("error");
+        }
+  }
   }
 
 }
-
-/*
-export function getWeather() {
-  return async (dispatch, getState) => {
-    let firstState = getState();
-    try {
-      const url =
-        "https://api.openweathermap.org/data/2.5/onecall?lat=" +
-        firstState.coords.lat +
-        "&lon=" +
-        firstState.coords.long +
-        "&exclude=current,minutely,alert,hourly&units=imperial&appid=8230789c2223488861ff99d985309312";
-      const response = await fetch(url).then((response) => response.json());
-      dispatch(setDays(response.daily));
-    } catch {
-      console.log("error");
-    }
-  };
-}
-
-*/
 
 //weather reducer 
 
@@ -197,6 +201,7 @@ export default function reducer(state = initialState, actions) {
       }
     case 'UPDATE_LATITUDE':
       //console.log("In updated Selected day")
+      console.log("Latitude is " + actions.payload)
       return {
         ...state,
         lat: actions.payload,
@@ -204,6 +209,7 @@ export default function reducer(state = initialState, actions) {
 
     case 'UPDATE_LONGITUDE':
       //console.log("In updated Selected day")
+      console.log("Longitude is " + actions.payload)
       return {
         ...state,
         long: actions.payload,
