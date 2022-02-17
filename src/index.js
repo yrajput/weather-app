@@ -15,4 +15,4 @@ ReactDOM.render(
 );
 
 reportWebVitals();
-store.dispatch(getWeather, getHourlyWeather);
+store.dispatch(getWeather);
