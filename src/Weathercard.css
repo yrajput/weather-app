@@ -19,8 +19,8 @@
     margin: 20px;
     padding: 10px;
     color: white;
-    background-color: rgb(102, 102, 102);
-    border-color: black;
+    background-color: rgb(150, 150, 150);
+    border-color: rgb(100, 100, 100);
 }
 
 .DayDate {
@@ -95,4 +95,3 @@ img.hourImage {
     width: 50px;
     background-color: rgba(46, 46, 255, 0.699);
 }
-

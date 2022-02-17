@@ -38,13 +38,6 @@ export function setLongitude(longitude) {
   };
 }
 
-export function setHourlyForecast(data) {
-  return {
-    type: "UPDATE_HOURLY_FORECAST",
-    payload: data,
-  };
-}
-
 export function setSelectedDay(day) {
   return {
     type: "UPDATE_SELECTED_DAY",
