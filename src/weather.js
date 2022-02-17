@@ -1,16 +1,15 @@
 export const initialState = {
   days: [],
-  location: "Boise, Idaho",
+  location: "",
   selectedDay: undefined,
   hourlyForecast: [],
-  coords: {
-    lat: 43.6135,
-    long: -116.2035,
-  },
+  lat: undefined,
+  long: undefined,
+  hourlyData: undefined,
 };
 
 //actions
-export function setDays(data) {
+export function setWeather(data) {
   return {
     type: "UPDATE_WEATHER",
     payload: data,
@@ -24,10 +23,18 @@ export function setLocation(location) {
   };
 }
 
-export function setHourly(data) {
+export function setLatitude(latitude) {
   return {
-    type: "UPDATE_HOURLY",
-    payload: data,
+    type: "UPDATE_LATITUDE",
+    payload: latitude,
+  };
+}
+
+export function setLongitude(longitude) {
+  console.log("action", longitude)
+  return {
+    type: "UPDATE_LONGITUDE",
+    payload: longitude,
   };
 }
 
@@ -38,62 +45,62 @@ export function setSelectedDay(day) {
   };
 }
 
-export function setLatLon(lat, lon) {
+export function setCitySuggestions(data) {
   return {
-    type: "UPDATE_LAT_LON",
-    payload: { lat: lat, lon: lon },
+    type: "UPDATE_CITY_SUGGESTIONS",
+    payload: data,
   };
 }
 
-export function getCoords() {
-  return async (dispatch, getState) => {
-    let firstState = getState();
-    const loc = firstState.location;
-    try {
-      const url =
-        "https://api.openweathermap.org/data/2.5/weather?q=" +
-        loc +
-        "&appid=8230789c2223488861ff99d985309312";
-      const data = await fetch(url).then((response) => response.json());
-      const lat = data.coord.lat;
-      const long = data.coord.lon;
-      dispatch(setLatLon(lat, long));
-    } catch {
-      console.log("coords error");
-    }
+
+export function displayHourlyData() {
+  return {
+    type: "DISPLAY_HOURLY_DATA",
   };
 }
 
-export function getHourlyWeather() {
-  return async (dispatch, getState) => {
-    let firstState = getState();
-    try {
-      const url =
-        "https://api.openweathermap.org/data/2.5/onecall?lat=" +
-        firstState.coords.lat +
-        "&lon=" +
-        firstState.coords.long +
-        "&exclude=current,minutely,alert&units=imperial&appid=8230789c2223488861ff99d985309312";
-      const response = await fetch(url).then((response) => response.json());
-      dispatch(setHourly(response.hourly));
-    } catch {
-      console.log("error for hourly");
-    }
-  };
-}
+
+export const getLocation = () => {
+  return new Promise((resolve, dispatch) =>
+    window.navigator.geolocation.getCurrentPosition(
+      (loc) => {resolve(loc);
+    
+      dispatch(setLatitude(loc.coords.latitude));
+      dispatch(setLongitude(loc.coords.longitude));
+      console.log(loc.coords.latitude) },
+        (err) => resolve(undefined)
+        )
+      );
+    };
+
+
 
 export function getWeather() {
   return async (dispatch, getState) => {
-    let firstState = getState();
-    try {
-      const url =
+    let url = "";
+    let state = getState();
+    if (!state.lat && !state.long) {
+      const l = await getLocation();
+      url =
         "https://api.openweathermap.org/data/2.5/onecall?lat=" +
-        firstState.coords.lat +
+        l.coords.latitude +
         "&lon=" +
-        firstState.coords.long +
-        "&exclude=current,minutely,alert,hourly&units=imperial&appid=8230789c2223488861ff99d985309312";
+        l.coords.longitude +
+        "&exclude=current,minutely,alert&units=imperial&appid=1c5699f9ad63ee93400478e17fbacb18";
+    } else {
+      url =
+      "https://api.openweathermap.org/data/2.5/onecall?lat=" +
+      state.lat +
+      "&lon=" +
+      state.long +
+      "&exclude=current,minutely,alert&units=imperial&appid=1c5699f9ad63ee93400478e17fbacb18";
+    }
+    state = getState();
+    try {
+      console.log("state long", state.long)
       const response = await fetch(url).then((response) => response.json());
-      dispatch(setDays(response.daily));
+      dispatch(setWeather(response));
+      console.log("called api");
     } catch {
       console.log("error");
     }
@@ -101,12 +108,15 @@ export function getWeather() {
 }
 
 //weather reducer
+
+
 export default function reducer(state = initialState, actions) {
   switch (actions.type) {
     case "UPDATE_WEATHER":
+      //Object to return to state
       return {
         ...state,
-        days: actions.payload.map((day, index) => {
+        days: actions.payload.daily.map((day, index) => {
           let date = new Date(day.dt * 1000);
           return {
             name: date.toLocaleString("en-US", { weekday: "long" }),
@@ -115,47 +125,52 @@ export default function reducer(state = initialState, actions) {
               month: "long",
               day: "numeric",
             }),
-            temp: day.temp.day,
+            temp: Math.round(day.temp.day) + "\xB0F",
             forecast: day.weather[0].description,
             id: index,
-            img:
-              "http://openweathermap.org/img/wn/" +
-              day.weather[0].icon +
-              "@2x.png",
-          };
+            img: 'http://openweathermap.org/img/wn/' + day.weather[0].icon + '@2x.png',
+          }
         }),
         selectedDay: undefined,
-      };
+        hourlyData: actions.payload.hourly,
+      }
+    case 'UPDATE_LOCATION':
+      return {
+        ...state,
+        location: actions.payload
+      }
     case "UPDATE_LOCATION":
       return {
         ...state,
         location: actions.payload,
       };
-    case "UPDATE_HOURLY":
+    case "DISPLAY_HOURLY_DATA":
       const startingIndex = state.selectedDay * 24;
-      const hourlyData = actions.payload.slice(
-        startingIndex,
-        startingIndex + 24
-      );
-      return {
-        ...state,
-        hourlyForecast: hourlyData.map((hour) => {
-          let time = new Date(hour.dt * 1000);
-          return {
-
-            hour: time.toLocaleTimeString("en-US", {
-              hour: "2-digit",
-              minute: "2-digit",
-            }),
-            hourlyTemp: hour.temp + "\xB0F",
-            hourlyCondition: hour.weather[0].description,
-            img:
-              "http://openweathermap.org/img/wn/" +
-              hour.weather[0].icon +
-              "@2x.png",
-          };
-        }),
-      };
+      if (state.hourlyData !== undefined) {
+        const hourlyArray = state.hourlyData.slice(startingIndex, startingIndex + 24);
+        return {
+          ...state,
+          hourlyForecast: hourlyArray.map((hour) => {
+            let time = new Date(hour.dt * 1000);
+            return {
+              hour: time.toLocaleTimeString("en-US", {
+                hour: "numeric",
+                minute: "2-digit",
+              }),
+              hourlyTemp: Math.round(hour.temp) + "\xB0F",
+              hourlyCondition: hour.weather[0].description,
+              img:
+                "http://openweathermap.org/img/wn/" +
+                hour.weather[0].icon +
+                "@2x.png",
+            };
+          }),
+        };
+      } else {
+        return {
+          ...state,
+        };
+      }
     case "UPDATE_SELECTED_DAY":
       if (state.selectedDay === actions.payload) {
         return {
@@ -168,13 +183,17 @@ export default function reducer(state = initialState, actions) {
           selectedDay: actions.payload,
         };
       }
-    case "UPDATE_LAT_LON":
+    case 'UPDATE_LATITUDE':
+
       return {
         ...state,
-        coords: {
-          lat: actions.payload.lat,
-          long: actions.payload.lon,
-        },
+        lat: actions.payload,
+      };
+
+    case "UPDATE_LONGITUDE":
+      return {
+        ...state,
+        long: actions.payload,
       };
     default:
       return state;
