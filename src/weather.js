@@ -67,7 +67,6 @@ export function setCitySuggestions(data) {
 export function getHourlyWeather() {
   return async (dispatch, getState) => {
     let firstState = getState()
-    const loc = firstState.location
     const lat = firstState.lat
     const long = firstState.long
     try {
@@ -110,6 +109,7 @@ export function getWeather() {
 
 }
 
+/*
 export function getWeather() {
   return async (dispatch, getState) => {
     let firstState = getState();
@@ -128,7 +128,7 @@ export function getWeather() {
   };
 }
 
-
+*/
 
 //weather reducer 
 
@@ -163,7 +163,7 @@ export default function reducer(state = initialState, actions) {
       // console.log(actions.payload)
       return {
         ...state,
-        hourlyForecast: hourlyData.map((hour) => {
+        hourlyForecast: hourlyArray.map((hour) => {
           let time = new Date(hour.dt * 1000);
           return {
 

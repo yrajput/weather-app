@@ -15,7 +15,7 @@ export default function Weathercard() {
   const dispatch = useDispatch();
 
 
-const { days, location, selectedDay, coords } = useSelector((state) => {
+const { days, location, selectedDay, } = useSelector((state) => {
     return {
       days: state.days,
       location: state.location,
@@ -23,7 +23,7 @@ const { days, location, selectedDay, coords } = useSelector((state) => {
       longitude: state.longitude,
       latitude: state.latitude
     }
-  })
+  });
 
   const [newLocation, setNewLocation] = useState(location);
   const changeLocation = (event) => {
@@ -32,7 +32,7 @@ const { days, location, selectedDay, coords } = useSelector((state) => {
 
   useEffect(() => {
     dispatch(getWeather());
-  }, [coords]);
+  }, [location]);
 
   useEffect(() => {
     dispatch(getHourlyWeather());
