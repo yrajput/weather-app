@@ -8,19 +8,20 @@ import {
   setLocation,
   setDays,
   setSelectedDay,
-  setHourly,
-  getHourlyWeather,
+  displayHourlyData,
 } from "./weather";
 
 export default function Weathercard() {
   const dispatch = useDispatch();
 
 
-const { days, location, selectedDay, } = useSelector((state) => {
+const { days, location, selectedDay, hourlyData, hourlyForecast} = useSelector((state) => {
     return {
       days: state.days,
       location: state.location,
       selectedDay: state.selectedDay,
+      hourlyData: state.hourlyData,
+      hourlyForecast: state.hourlyForecast
     }
   });
 
@@ -29,7 +30,7 @@ const { days, location, selectedDay, } = useSelector((state) => {
   }, [location]);
 
   useEffect(() => {
-    dispatch(getHourlyWeather());
+    dispatch(displayHourlyData());
   }, [selectedDay]);
 
   return (
